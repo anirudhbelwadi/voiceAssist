@@ -1,0 +1,57 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if not screening_request.completion_date %}
+        {% if not user_profile.isDoctor %}
+            <div class="card shadow-sm p-4 bg-light">
+                <h4 class="mb-4 text-primary">Screening Chat</h4>
+
+                <div class="border rounded p-3 mb-3 bg-white" style="height: 600px; overflow-y: auto;" id="chatBox">
+                    <div class="message bot text-secondary mb-2">
+                        <strong>Bot:</strong> Welcome! Let's start your screening. What's your full name?
+                    </div>
+                </div>
+
+                <div class="input-group" id="chatBoxInput">
+                    <input type="text" id="userInput" class="form-control" placeholder="Type your response...">
+                    <button class="btn btn-primary" onClick="sendMessage()">Send</button>
+                </div>
+            </div>
+
+            <script>
+                var patient_id = "{{ screening_request.patient.id }}";
+                var screening_id = "{{ screening_request.id }}";
+            </script>
+            <script src="/static/dashboard/scripts/screening.js"></script>
+
+        {% else %}
+            <div class="alert alert-warning mt-3">Screening not completed yet.</div>
+        {% endif %}
+    {% else %}
+        <div class="card shadow-sm p-4 bg-light">
+            {% if user_profile.isDoctor %}
+                <p><strong>Patient:</strong> {{ screening_request.patient.user_profile.first_name }} {{ screening_request.patient.user_profile.last_name }}</p>
+            {% endif %}
+
+            <p><strong>Completed on:</strong> {{ screening_request.completion_date }}</p>
+
+            <hr>
+
+            <h5 class="text-primary">Conversation</h5>
+            <div class="bg-white border p-3 mb-4 rounded" style="max-height: 400px; overflow-y: auto;">
+                {% for messages in conversation %}
+                    <p><strong>Bot:</strong> {{ messages.bot_message }}</p>
+                    <p><strong>{{ screening_request.patient.user_profile.first_name }} {{ screening_request.patient.user_profile.last_name }}:</strong> {{ messages.user_message }}</p>
+                    <hr>
+                {% endfor %}
+            </div>
+
+            <h5 class="text-primary">AI Summary of Conversation</h5>
+            <div class="alert alert-info">{{ screening_request.summary }}</div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

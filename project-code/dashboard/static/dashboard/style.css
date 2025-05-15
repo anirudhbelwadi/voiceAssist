@@ -1,0 +1,68 @@
+.header {
+    background-color: lightgray;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.chat-container {
+    border-radius: 10px;
+    height: max-content;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.input-group {
+    padding: 20px;
+    background-color: rgb(195, 195, 195);
+    width: 100%;
+    border-radius: 10px;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    max-width: 80%;
+}
+
+.bot {
+    background: #e9ecef;
+    text-align: start;
+}
+
+.user {
+    background: #0d6efd;
+    color: white;
+    text-align: start;
+    margin-left: auto;
+}
+
+.screening-container {
+    max-height: calc(100vh - 72px);
+    min-height: calc(100vh - 72px);
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+}
+
+.bg-container {
+    background: url('/static/dashboard/images/user-type-hero.jpg');
+    background-repeat: none;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}

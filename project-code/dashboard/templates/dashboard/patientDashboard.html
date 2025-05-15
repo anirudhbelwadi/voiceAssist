@@ -1,0 +1,75 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="p-4 bg-light rounded shadow-sm">
+        <h2 class="mb-4 text-center text-primary">Screenings to Complete</h2>
+
+        <div class="table-responsive mb-5">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Doctor</th>
+                        <th scope="col">Request Date</th>
+                        <th scope="col">Due Date</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for screening in non_completed_screenings %}
+                    <tr>
+                        <td>{{ screening.doctor.user_profile.first_name }} {{ screening.doctor.user_profile.last_name }}</td>
+                        <td>{{ screening.request_date }}</td>
+                        <td>{{ screening.due_date }}</td>
+                        <td>
+                            <a href="{% url 'viewScreeningRequest' screening.id %}" class="btn btn-sm btn-primary">
+                                Complete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">No pending screenings</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="mb-4 text-center text-primary">Completed Screenings</h2>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Doctor</th>
+                        <th scope="col">Request Date</th>
+                        <th scope="col">Completion Date</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for screening in completed_screenings %}
+                    <tr>
+                        <td>{{ screening.doctor.user_profile.first_name }} {{ screening.doctor.user_profile.last_name }}</td>
+                        <td>{{ screening.request_date }}</td>
+                        <td>{{ screening.completion_date }}</td>
+                        <td>
+                            <a href="{% url 'viewScreeningRequest' screening.id %}" class="btn btn-sm btn-primary">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">No completed screenings</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

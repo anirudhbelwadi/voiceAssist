@@ -1,0 +1,22 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Select Patient or Doctor{% endblock %}
+
+{% block content %}
+
+<div class="bg-container">
+<h2>Hi! You seem to be a new user.</h2>
+<br><br>
+<div class="d-flex">
+    <a style="text-decoration: none; font-weight: 600; color: black; min-width: 300px" href="{% url 'registerPatient' %}" class="card mx-2 text-center">
+        <span style="font-size: 70px;">🤵🏻‍♂️</span>Register as Patient
+    </a>
+    <a style="text-decoration: none; font-weight: 600; color: black; min-width: 300px" href="{% url 'registerDoctor' %}" class="card mx-2 text-center">
+        <span style="font-size: 70px;">🩺</span>Register as Doctor
+    </a>
+</div>
+
+</div>
+
+
+{% endblock %}

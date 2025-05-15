@@ -1,0 +1,277 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Patient Profile{% endblock %}
+
+{% block content %}
+
+{% if not user_profile.isDoctor %}
+{% include 'dashboard/addDoctorModal.html' %}
+{% endif %}
+
+<script>
+    var patientId = "{{ patient.user.id }}";
+</script>
+
+{% if user_profile.isDoctor %}
+<script src="/static/dashboard/scripts/updatePatientDetails.js"></script>
+{% else %}
+<script src="/static/dashboard/scripts/removeDoctor.js"></script>
+{% endif %}
+<div>
+    <div class="card">
+        <h5><strong>Basic Details</strong></h5>
+        {% if not user_profile.isDoctor %}
+        <form method="POST">
+            {% csrf_token %}
+            <table class="table">
+                <tr>
+                    <th>Name:</th>
+                    <td>
+                        {{ user_profile.first_name }} {{ user_profile.last_name }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Email:</th>
+                    <td>
+                        {{ user_profile.email }}
+                    </td>
+                </tr>
+                {{ basic_details_form.as_table }}
+                <tr>
+                    <td></td>
+                    <td><button class="submit_button" type="submit" value="Submit">Submit</button></td>
+                </tr>
+            </table>
+        </form>
+        {% else %}
+        <table class="table">
+            <tr>
+                <td><strong>Name:</strong></td>
+                <td>
+                    {{ patient.user_profile.first_name }} {{ patient.user_profile.last_name }}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Email:</strong></td>
+                <td>{{ patient.user_profile.email }}</td>
+            </tr>
+            <tr>
+                <td><strong>Phone Number:</strong></td>
+                <td>
+                    {% if patient.user_profile.phone_number %}
+                        {{ patient.user_profile.phone_number }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Address:</strong></td>
+                <td>
+                    {% if patient.address %}
+                        {{ patient.address }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Date of Birth:</strong></td>
+                <td>
+                    {% if patient.date_of_birth %}
+                        {{ patient.date_of_birth }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Gender:</strong></td>
+                <td>
+                    {% if patient.gender %}
+                        {{ patient.gender }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        {% endif %}
+    </div>
+
+    <!-- Vitals -->
+    <div class="card">
+        <h5><strong>Vitals</strong></h5>
+        {% if not user_profile.isDoctor %}
+        <table id="vitalsTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Vitals</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Blood Pressure</td>
+                    <td>{{vitals.blood_pressure}}</td>
+                </tr>
+                <tr>
+                    <td>Blood Sugar Level</td>
+                    <td>{{vitals.blood_sugar_level}}</td>
+                </tr>
+                <tr>
+                    <td>Weight</td>
+                    <td>{{vitals.weight}}</td>
+                </tr>
+                <tr>
+                    <td>Height</td>
+                    <td>{{vitals.height}}</td>
+                </tr>
+            </tbody>
+        </table>
+        {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <table class="table">
+                {{ vitals_form.as_table }}
+                <tr>
+                    <td></td>
+                    <td><button class="submit_button" type="submit" value="Submit">Submit</button></td>
+                </tr>
+            </table>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- Medications -->
+    <div class="card">
+        <h5><strong>Medications</strong></h5>
+        <table id="medicationsTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Medication</th>
+                    <th>Frequency</th>
+                </tr>
+            </thead>
+            <tbody id="medications">
+                {% if medications|length == 0 %}
+                <tr id="no-medication">
+                    <td colspan="2">No medications found.</td>
+                </tr>
+                {% else %}
+                {% for medication in medications %}
+                <tr>
+                    <td>{{ medication.name }}</td>
+                    <td>{{ medication.frequency }}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+        {% if user_profile.isDoctor %}
+            <div class="row">
+                <div class="col mb-2">
+                    <input type="text" id="medicationName" placeholder="Medication Name">
+                </div>
+                <div class="col mb-2">
+                    <input type="text" id="medicationFrequency" placeholder="Medication Frequency">
+                </div>
+                <div class="col mb-2">
+                    <button type="button" class="btn btn-primary" onclick="addMedication()">Add Medication</button>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Health Conditions -->
+    <div class="card">
+        <h5><strong>Health Conditions</strong></h5>
+        <table id="conditionsTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Severity</th>
+                    <th>Date of Diagnosis</th>
+                </tr>
+            </thead>
+            <tbody id="health-conditions">
+                {% if health_conditions|length == 0 %}
+                <tr id="no-condition">
+                    <td colspan="3">No Health Conditions found.</td>
+                </tr>
+                {% else %}
+                {% for condition in health_conditions %}
+                <tr>
+                    <td>{{condition.name}}</td>
+                    <td>{{condition.severity}}</td>
+                    <td>{{condition.diagnosis_date}}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+        {% if user_profile.isDoctor %}
+            <div class="row">
+                <div class="col mb-2">
+                    <input type="text" id="conditionName" placeholder="Condition Name">
+                </div>
+                <div class="col mb-2">
+                    <input type="text" id="conditionSeverity" placeholder="Condition Severity">
+                </div>
+                <div class="col mb-2">
+                    <input type="date" id="conditionDate" placeholder="Date of Diagnosis">
+                </div>
+                <div class="col mb-2">
+                    <button type="button" class="btn btn-primary" onclick="addCondition()">Add Condition</button>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Doctors -->
+    <div class="card">
+        {% if user_profile.isDoctor %}
+        <h5><strong>Doctors they are seeing</strong></h5>
+        {% else %}
+        <h5><strong>Doctors you are seeing</strong></h5>
+        {% endif %}
+        <table id="doctorsTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Doctor Name</th>
+                    <th>Specialty</th>
+                    {% if not user_profile.isDoctor %}
+                        <th>Action</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody id="related-doctors">
+                {% for doctor in related_doctors %}
+                <tr id="doctor-{{ doctor.id }}">
+                    <td>
+                        <a href="{% url 'doctorProfile' doctor.user_profile.id %}">{{ doctor.user_profile.first_name }} {{ doctor.user_profile.last_name }}</a>
+                        {% if user_profile.isDoctor %}
+                            {% if doctor.user_profile == user_profile %}
+                                &nbsp;<span class="badge bg-success">You</span>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ doctor.specialty }}</td>
+                    {% if not user_profile.isDoctor %}
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="removeDoctor('{{ doctor.id }}')">Remove</button>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if not user_profile.isDoctor %}
+        <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#addDoctorModal" onclick="addDoctorView()">+ Add Doctor</button>
+        {% endif %}
+    </div>
+</div>
+
+
+
+{% endblock %}

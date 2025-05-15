@@ -1,0 +1,30 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Doctor - Screening Request{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary">Screening Request Form</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <table class="table table-borderless">
+                    {{ form.as_table }}
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button id="id_sendScreening_button" class="btn btn-primary" type="submit">Send Screening</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'createTemplate' %}" class="btn btn-outline-secondary">Create New Template</a>
+    </div>
+</div>
+{% endblock %}

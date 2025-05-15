@@ -1,0 +1,42 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Doctor - View Screenings{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-primary">Patient Screenings</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Name of Patient</th>
+                <th>Screening Completed</th>
+                <th>View Screening</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for screening in screenings %}
+            <tr>
+                <td id="patientName">
+                    {{ screening.patient.user_profile.first_name }} {{ screening.patient.user_profile.last_name }}</td>
+                <td>
+                    {% if screening.completion_date %}
+                    <span class="text-success">Completed</span>
+                    {% else %}
+                    <span class="text-danger">Not Completed</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'viewScreeningRequest' screening.id %}" id="screeningLink"
+                        class="btn btn-outline-primary btn-sm">View Screening</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'sendScreeningRequest' %}" class="btn btn-success">Request New Screening</a>
+</div>
+{% endblock %}

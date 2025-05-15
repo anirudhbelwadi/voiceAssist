@@ -1,0 +1,30 @@
+<div class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="addDoctorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addDoctorModalLabel">Add Doctor</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Doctor Name</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="doctor-list">
+                      
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const username = "{{user_profile.user.username}}";
+</script>
+
+<script src="/static/dashboard/scripts/addDoctor.js"></script>
